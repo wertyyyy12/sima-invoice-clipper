@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice Clipper — PDF Viewer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="viewer-toolbar">
+    <strong id="filename">PDF Viewer</strong>
+    <div class="toolbar-controls">
+      <div class="page-nav" id="pageNav" hidden>
+        <button id="prevPage" title="Previous page">&#9664;</button>
+        <span id="pageInfo">Page 1 of 1</span>
+        <button id="nextPage" title="Next page">&#9654;</button>
+      </div>
+      <div class="zoom-controls">
+        <button id="zoomOut" title="Zoom out">-</button>
+        <span id="zoomValue">100%</span>
+        <button id="zoomIn" title="Zoom in">+</button>
+        <button id="zoomFit" title="Reset zoom">Fit</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="viewer-scroll" id="viewerScroll">
+    <div class="pdf-page" id="pdfPage">
+      <canvas id="pdfCanvas"></canvas>
+      <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+    </div>
+  </div>
+
+  <div class="legend" id="legend"></div>
+
+  <script type="module" src="viewer.js"></script>
+</body>
+</html>

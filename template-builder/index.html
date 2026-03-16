@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice Clipper — Template Builder</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Setup screen for new templates -->
+  <div class="setup-overlay" id="setupOverlay">
+    <div class="setup-card">
+      <h1>New Template</h1>
+      <p class="setup-subtitle">Give your template a name and upload a sample invoice to get started.</p>
+
+      <div class="setup-field">
+        <label for="setupName">Template Name</label>
+        <input type="text" id="setupName" placeholder="e.g. West Coast Plumbing" autofocus />
+      </div>
+
+      <label class="setup-dropzone" id="setupDropzone">
+        <input type="file" id="setupPdfFile" accept="application/pdf" hidden />
+        <div class="dropzone-icon">&#128196;</div>
+        <div class="dropzone-text" id="setupDropzoneText">Drop a sample PDF here or click to browse</div>
+      </label>
+
+      <button id="setupContinueBtn" class="btn btn-primary setup-continue" disabled>Continue</button>
+    </div>
+  </div>
+
+  <div class="builder-layout">
+    <!-- Left: PDF Viewer -->
+    <div class="pdf-viewer">
+      <div class="pdf-toolbar">
+        <label class="upload-label">
+          <span id="uploadText">Upload a sample PDF</span>
+          <input type="file" id="pdfFile" accept="application/pdf" hidden />
+        </label>
+        <div class="toolbar-controls">
+          <div class="page-nav" id="pageNav" hidden>
+            <button id="prevPage" title="Previous page">&#9664;</button>
+            <span id="pageInfo">Page 1 of 1</span>
+            <button id="nextPage" title="Next page">&#9654;</button>
+          </div>
+          <div class="zoom-controls" id="zoomControls" hidden>
+            <button id="zoomOut" title="Zoom out">-</button>
+            <span id="zoomValue">100%</span>
+            <button id="zoomIn" title="Zoom in">+</button>
+            <button id="zoomFit" title="Reset zoom">Fit</button>
+          </div>
+        </div>
+      </div>
+      <div class="pdf-scroll" id="pdfScroll">
+        <div class="pdf-page" id="pdfPage">
+          <canvas id="pdfCanvas"></canvas>
+          <canvas id="overlayCanvas" class="overlay-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Builder Panel -->
+    <aside class="builder-panel">
+      <h1>New Template</h1>
+
+      <div class="form-group">
+        <label for="templateName">Template Name</label>
+        <input type="text" id="templateName" placeholder="e.g. West Coast Plumbing" />
+      </div>
+
+      <p class="hint" id="hint">
+        Upload a PDF, then add fields by drawing rectangles around the values you want to extract.
+      </p>
+
+      <div class="fields-section" id="fieldsSection" hidden>
+        <h2>Fields</h2>
+        <div id="fieldsList"></div>
+
+        <div class="add-field-row" id="addFieldRow">
+          <input type="text" id="newFieldLabel" placeholder="Field label (e.g. Ref #)" />
+          <button id="addFieldBtn" class="btn btn-primary">+ Add Field</button>
+          <button id="cancelPendingBtn" class="btn btn-small" hidden>Cancel</button>
+        </div>
+
+        <div class="drawing-hint" id="drawingHint" hidden>
+          <p>Draw a rectangle on the PDF around <strong id="drawingFieldName"></strong></p>
+          <button id="cancelDrawing" class="btn btn-small">Cancel</button>
+        </div>
+      </div>
+
+      <div class="builder-footer">
+        <button id="cancelBtn" class="btn">Cancel</button>
+        <button id="saveBtn" class="btn btn-primary" disabled>Save Template</button>
+      </div>
+    </aside>
+  </div>
+
+  <script type="module" src="builder.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invoice Clipper (Gemini)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Invoice Clipper (Gemini)</h1>
+    <button id="settingsBtn" class="settings-btn" title="Settings">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.902 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291a1.873 1.873 0 0 0-1.116-2.693l-.318-.094c-.835-.246-.835-1.428 0-1.674l.319-.094a1.873 1.873 0 0 0 1.115-2.692l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.116l.094-.318z"/>
+      </svg>
+    </button>
+  </header>
+
+  <div id="settingsOverlay" class="settings-overlay" hidden>
+    <div class="settings-modal">
+      <div class="settings-header">
+        <strong>Settings</strong>
+        <button id="settingsCloseBtn" class="settings-close-btn">&times;</button>
+      </div>
+      <div class="settings-body">
+        <div class="settings-field">
+          <label for="apiKeyInput">Gemini API Key</label>
+          <div class="api-key-row">
+            <input type="password" id="apiKeyInput" placeholder="Enter your Gemini API key" autocomplete="off" />
+            <button id="apiKeyToggleBtn" class="btn btn-small" type="button">Show</button>
+          </div>
+          <p class="hint">Stored locally in your browser's extension storage.</p>
+        </div>
+
+        <div class="settings-field">
+          <label for="batchSizeInput">PDFs Per Batch</label>
+          <input
+            type="number"
+            id="batchSizeInput"
+            min="1"
+            max="50"
+            step="1"
+            placeholder="10"
+          />
+          <p class="hint">Default is 10. Higher values can be faster but may trigger more rate limits.</p>
+        </div>
+      </div>
+      <div class="settings-footer">
+        <button id="settingsSaveBtn" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="prompt-section">
+    <label for="promptInput">Extraction Prompt</label>
+    <textarea
+      id="promptInput"
+      placeholder="Example: Extract vendor, account number, bill date, due date, amount, and service address. Return JSON keys: vendor, account_no, bill_date, due_date, amount, service_address."
+    ></textarea>
+    <p class="hint">Gemini will receive this prompt + each PDF and must return JSON.</p>
+    <div class="prompt-actions">
+      <button id="rerunExtractionBtn" class="btn btn-small btn-primary" hidden>Extract Info</button>
+    </div>
+  </section>
+
+  <section class="upload-section">
+    <label class="upload-area" id="uploadArea">
+      <span class="upload-label-text">Drop PDFs here or click to upload</span>
+      <input type="file" id="pdfFiles" accept="application/pdf" multiple hidden />
+    </label>
+  </section>
+
+  <div id="status" class="status" hidden></div>
+
+  <section id="invoiceView" class="invoice-view" hidden>
+    <div class="invoice-header">
+      <div class="invoice-nav-info">
+        <strong id="invoiceCounter">Invoice 1 of 1</strong>
+        <div class="filename-row">
+          <span class="filename" id="invoiceFilename">file.pdf</span>
+          <button id="copyFilenameBtn" class="copy-btn filename-copy-btn">Copy Name</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="preview-container" id="previewContainer" hidden>
+      <canvas id="previewCanvas"></canvas>
+    </div>
+
+    <div id="fieldsContainer" class="fields-container"></div>
+
+    <div class="invoice-nav">
+      <button id="prevInvoice" class="btn btn-small">&larr; Prev</button>
+      <label class="complete-check">
+        <input type="checkbox" id="markComplete" />
+        Done
+      </label>
+      <button id="nextInvoice" class="btn btn-small">Next &rarr;</button>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-dots" id="progressDots"></div>
+      <span class="progress-meta" id="progressMeta">0/0</span>
+    </div>
+
+    <div class="export-row">
+      <button id="exportCsvBtn" class="btn btn-small">Export CSV</button>
+    </div>
+  </section>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

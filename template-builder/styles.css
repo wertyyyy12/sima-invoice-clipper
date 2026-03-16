@@ -1,0 +1,452 @@
+:root {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --border: #dee2e6;
+  --text: #212529;
+  --text-muted: #6c757d;
+  --primary: #4263eb;
+  --primary-hover: #3b5bdb;
+  --danger: #e03131;
+  --danger-hover: #c92a2a;
+  --radius: 6px;
+  --field-colors: #4263eb, #e03131, #2b8a3e, #e8590c, #9c36b5, #1098ad;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.builder-layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  height: 100vh;
+}
+
+/* PDF Viewer (left) */
+.pdf-viewer {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border);
+  background: #e9ecef;
+  overflow: hidden;
+}
+
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  min-height: 44px;
+}
+
+.toolbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.upload-label {
+  cursor: pointer;
+  color: var(--primary);
+  font-weight: 500;
+}
+.upload-label:hover {
+  text-decoration: underline;
+}
+
+.page-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.page-nav button,
+.zoom-controls button {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.page-nav button:hover,
+.zoom-controls button:hover {
+  background: var(--bg);
+}
+.page-nav button:disabled,
+.zoom-controls button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+#zoomValue {
+  min-width: 46px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pdf-scroll {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.pdf-page {
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: white;
+}
+
+.pdf-page canvas {
+  display: block;
+}
+
+.overlay-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.overlay-canvas.drawing {
+  cursor: crosshair;
+}
+
+
+
+/* Builder Panel (right) */
+.builder-panel {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  overflow-y: auto;
+  background: var(--surface);
+}
+
+.builder-panel h1 {
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.builder-panel h2 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+.form-group label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.form-group input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+.hint {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+.fields-section {
+  flex: 1;
+  margin-bottom: 16px;
+}
+
+/* Field cards */
+.field-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  position: relative;
+  border-left: 3px solid var(--field-color, var(--primary));
+}
+
+.field-card .field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.field-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.field-card .field-label {
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.field-card .field-redraw {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 8px;
+}
+
+.field-card .field-redraw:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.field-card .field-redraw:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.field-card .field-delete {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 4px;
+  line-height: 1;
+}
+.field-card .field-delete:hover {
+  color: var(--danger);
+}
+
+.field-card .field-value {
+  font-size: 13px;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+.field-card .field-value .extracted {
+  color: var(--text);
+  font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
+  background: #f1f3f5;
+  padding: 1px 4px;
+  border-radius: 3px;
+  white-space: pre-wrap;
+}
+
+.field-card .field-coords {
+  font-size: 11px;
+  color: #adb5bd;
+  margin-top: 2px;
+}
+
+/* Add field row */
+.add-field-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.add-field-row input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+
+.drawing-hint {
+  margin-top: 12px;
+  padding: 12px;
+  background: #fff9db;
+  border: 1px solid #fcc419;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.drawing-hint[hidden] {
+  display: none;
+}
+.drawing-hint p {
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn:hover {
+  background: var(--bg);
+}
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.btn-small {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+.builder-footer {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+/* ── Setup overlay ── */
+.setup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.setup-overlay[hidden] {
+  display: none;
+}
+
+.setup-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 40px;
+  width: 460px;
+  max-width: 90vw;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+.setup-card h1 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+
+.setup-subtitle {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.4;
+  margin-bottom: 24px;
+}
+
+.setup-field {
+  margin-bottom: 20px;
+}
+.setup-field label {
+  display: block;
+  font-weight: 500;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+.setup-field input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+.setup-field input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(66, 99, 235, 0.12);
+}
+
+.setup-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 36px 20px;
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  margin-bottom: 24px;
+}
+.setup-dropzone:hover,
+.setup-dropzone.dragover {
+  border-color: var(--primary);
+  background: rgba(66, 99, 235, 0.04);
+}
+.setup-dropzone.has-file {
+  border-color: #2b8a3e;
+  background: rgba(43, 138, 62, 0.04);
+}
+
+.dropzone-icon {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.dropzone-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.setup-dropzone.has-file .dropzone-text {
+  color: #2b8a3e;
+  font-weight: 500;
+}
+
+.setup-continue {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+}
+.setup-continue:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
