@@ -123,7 +123,7 @@ If multiple raw keys collapse to same canonical key, non-empty/longer values win
 
 - `geminiPrompt`: current prompt textarea value
 - `geminiApiKey`: API key set in settings modal
-- `geminiBatchSize`: configured PDFs per batch (default 10)
+- `geminiBatchSize`: configured PDFs per batch (default 5)
 - `invoiceMeta`: lightweight session metadata
   - `lastExtractionPrompt`
   - `currentIndex`
@@ -174,7 +174,7 @@ Payload includes inline PDF data (`mimeType: application/pdf`) and `temperature:
 
 ## 6.3 Batching and Parallelism
 
-- Files are chunked by `parallelBatchSize` (default 10)
+- Files are chunked by `parallelBatchSize` (default 5)
 - Each batch runs with `Promise.all` (full intra-batch parallelism)
 - Batches run sequentially
 
@@ -288,4 +288,3 @@ Common safe modifications:
    - context menu values match current invoice
    - mini preview renders and opens full viewer
    - CSV export columns are normalized and stable
-
